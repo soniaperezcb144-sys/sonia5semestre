@@ -1,0 +1,898 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Conceptos básicos de automatización: historia, ciclo, ventajas y desventajas, diferencias entre automatización industrial y de servicios">
+  <title>Conceptos Básicos de Automatización | Portafolio</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Montserrat:wght@600;700;800&display=swap" rel="stylesheet">
+
+  <style>
+    :root{
+      --azul:#76c7e8;
+      --azul-claro:#e5f7fd;
+      --azul-medio:#b9e3f2;
+      --azul-oscuro:#245a78;
+      --rosa:#d9aebc;
+      --rosa-claro:#f5e5ea;
+      --blanco:#fff;
+      --fondo:#f5fbfe;
+      --texto:#304957;
+      --muted:#718792;
+      --borde:#d8eaf2;
+      --sombra:0 15px 40px rgba(44,101,126,.12);
+    }
+
+    *{box-sizing:border-box;margin:0;padding:0}
+
+    html{scroll-behavior:smooth}
+
+    body{
+      font-family:"DM Sans",sans-serif;
+      color:var(--texto);
+      background:
+        radial-gradient(circle at 5% 5%,rgba(118,199,232,.18),transparent 27%),
+        radial-gradient(circle at 95% 15%,rgba(217,174,188,.16),transparent 25%),
+        var(--fondo);
+      line-height:1.7;
+    }
+
+    body::before{
+      content:"";
+      position:fixed;
+      inset:0;
+      z-index:-1;
+      pointer-events:none;
+      opacity:.25;
+      background-image:
+        linear-gradient(rgba(118,199,232,.08) 1px,transparent 1px),
+        linear-gradient(90deg,rgba(118,199,232,.08) 1px,transparent 1px);
+      background-size:42px 42px;
+      mask-image:linear-gradient(to bottom,black,transparent 90%);
+    }
+
+    a{text-decoration:none}
+
+    /* ENCABEZADO */
+    .hero{
+      padding:30px 20px 80px;
+      position:relative;
+      overflow:hidden;
+    }
+
+    .hero-inner{
+      width:min(1050px,100%);
+      margin:auto;
+    }
+
+    .back{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding:10px 16px;
+      border:1px solid var(--borde);
+      border-radius:999px;
+      background:rgba(255,255,255,.85);
+      color:var(--azul-oscuro);
+      font-weight:700;
+      font-size:.82rem;
+      box-shadow:0 8px 22px rgba(44,101,126,.08);
+      transition:.25s ease;
+      margin-bottom:55px;
+    }
+
+    .back:hover{
+      transform:translateX(-4px);
+      background:var(--azul);
+      color:white;
+    }
+
+    .badge{
+      display:inline-block;
+      padding:8px 14px;
+      border-radius:999px;
+      background:var(--rosa-claro);
+      color:#9a6e7e;
+      border:1px solid #ead1da;
+      font-size:.72rem;
+      font-weight:800;
+      letter-spacing:.12em;
+      text-transform:uppercase;
+      margin-bottom:20px;
+    }
+
+    .hero h1{
+      max-width:900px;
+      font-family:"Montserrat",sans-serif;
+      color:var(--azul-oscuro);
+      font-size:clamp(2.3rem,5.5vw,4.6rem);
+      line-height:1.08;
+      letter-spacing:-.045em;
+      margin-bottom:22px;
+    }
+
+    .hero h1 span{
+      color:#ae788b;
+    }
+
+    .intro{
+      max-width:800px;
+      color:var(--muted);
+      font-size:1.08rem;
+    }
+
+    .student{
+      margin-top:30px;
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+    }
+
+    .student span{
+      padding:8px 13px;
+      background:rgba(255,255,255,.9);
+      border:1px solid var(--borde);
+      border-radius:10px;
+      font-size:.8rem;
+      color:#587481;
+      font-weight:600;
+    }
+
+    /* CONTENIDO */
+    main{
+      width:min(1050px,calc(100% - 40px));
+      margin:0 auto 80px;
+    }
+
+    .content-grid{
+      display:grid;
+      grid-template-columns:1.5fr .85fr;
+      gap:24px;
+      align-items:start;
+    }
+
+    .box{
+      background:rgba(255,255,255,.94);
+      border:1px solid var(--borde);
+      border-radius:24px;
+      box-shadow:var(--sombra);
+      padding:30px;
+      margin-bottom:24px;
+    }
+
+    .box h2{
+      font-family:"Montserrat",sans-serif;
+      color:var(--azul-oscuro);
+      font-size:1.55rem;
+      margin-bottom:14px;
+    }
+
+    .box h2::before{
+      content:"";
+      display:inline-block;
+      width:8px;
+      height:26px;
+      border-radius:10px;
+      background:var(--rosa);
+      vertical-align:-5px;
+      margin-right:10px;
+    }
+
+    .box p{
+      color:var(--muted);
+      margin-bottom:13px;
+    }
+
+    .box p:last-child{margin-bottom:0}
+
+    /* CONCEPTOS */
+    .concepts{
+      display:grid;
+      grid-template-columns:repeat(2,1fr);
+      gap:13px;
+      margin-top:18px;
+    }
+
+    .concept{
+      padding:17px;
+      border-radius:17px;
+      background:linear-gradient(135deg,#f1fbfe,#fff);
+      border:1px solid var(--borde);
+    }
+
+    .concept strong{
+      display:block;
+      color:var(--azul-oscuro);
+      margin-bottom:4px;
+      font-family:"Montserrat",sans-serif;
+      font-size:.92rem;
+    }
+
+    .concept p{
+      font-size:.83rem;
+      line-height:1.55;
+    }
+
+    /* CICLO / RELACIÓN */
+    .flow{
+      display:flex;
+      align-items:stretch;
+      gap:8px;
+      margin-top:20px;
+      flex-wrap:wrap;
+    }
+
+    .flow-item{
+      flex:1;
+      min-width:110px;
+      text-align:center;
+      padding:17px 9px;
+      border-radius:15px;
+      background:var(--azul-claro);
+      border:1px solid #c8e8f3;
+    }
+
+    .flow-item:nth-child(even){
+      background:var(--rosa-claro);
+      border-color:#ead1da;
+    }
+
+    .flow-item b{
+      display:block;
+      color:var(--azul-oscuro);
+      font-size:.85rem;
+    }
+
+    .flow-item small{
+      color:#78909b;
+      font-size:.72rem;
+    }
+
+    .arrow{
+      align-self:center;
+      color:#a47787;
+      font-weight:bold;
+    }
+
+    /* VENTAJAS Y DESVENTAJAS */
+    .pros-cons{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:14px;
+      margin-top:18px;
+    }
+
+    .pc-card{
+      border-radius:17px;
+      padding:18px;
+      border:1px solid var(--borde);
+    }
+
+    .pc-card.pros{
+      background:linear-gradient(135deg,#eafaf3,#fff);
+      border-color:#cdeedc;
+    }
+
+    .pc-card.cons{
+      background:linear-gradient(135deg,#fdf0ee,#fff);
+      border-color:#f3d7d2;
+    }
+
+    .pc-card h3{
+      font-family:"Montserrat",sans-serif;
+      font-size:1rem;
+      margin-bottom:10px;
+      color:var(--azul-oscuro);
+    }
+
+    .pc-card ul{
+      list-style:none;
+    }
+
+    .pc-card li{
+      position:relative;
+      padding:7px 0 7px 24px;
+      font-size:.85rem;
+      color:var(--muted);
+    }
+
+    .pc-card.pros li::before{
+      content:"+";
+      position:absolute;
+      left:0;
+      color:#2f9e6b;
+      font-weight:800;
+    }
+
+    .pc-card.cons li::before{
+      content:"–";
+      position:absolute;
+      left:0;
+      color:#c56454;
+      font-weight:800;
+    }
+
+    /* TABLA COMPARATIVA */
+    .compare-table{
+      width:100%;
+      border-collapse:collapse;
+      margin-top:18px;
+      font-size:.85rem;
+    }
+
+    .compare-table th,
+    .compare-table td{
+      text-align:left;
+      padding:12px 10px;
+      border-bottom:1px solid #edf4f7;
+      color:var(--muted);
+    }
+
+    .compare-table th{
+      font-family:"Montserrat",sans-serif;
+      color:var(--azul-oscuro);
+      font-size:.78rem;
+      text-transform:uppercase;
+      letter-spacing:.05em;
+    }
+
+    .compare-table tr:last-child td{border-bottom:0}
+
+    .compare-table td:first-child{
+      font-weight:700;
+      color:var(--azul-oscuro);
+      white-space:nowrap;
+    }
+
+    /* LISTAS */
+    .list{
+      list-style:none;
+      margin-top:17px;
+    }
+
+    .list li{
+      position:relative;
+      padding:10px 0 10px 28px;
+      color:var(--muted);
+      border-bottom:1px solid #edf4f7;
+    }
+
+    .list li:last-child{border-bottom:0}
+
+    .list li::before{
+      content:"✓";
+      position:absolute;
+      left:0;
+      top:10px;
+      width:20px;
+      height:20px;
+      border-radius:50%;
+      display:grid;
+      place-items:center;
+      background:var(--azul-claro);
+      color:var(--azul-oscuro);
+      font-size:.7rem;
+      font-weight:bold;
+    }
+
+    /* TARJETAS LATERALES */
+    .side-title{
+      color:#9a6e7e;
+      font-size:.72rem;
+      font-weight:800;
+      letter-spacing:.13em;
+      text-transform:uppercase;
+      margin-bottom:10px;
+    }
+
+    .mini{
+      margin-bottom:24px;
+    }
+
+    .mini:last-child{margin-bottom:0}
+
+    .mini h3{
+      font-family:"Montserrat",sans-serif;
+      color:var(--azul-oscuro);
+      font-size:1.05rem;
+      margin-bottom:7px;
+    }
+
+    .mini p{
+      font-size:.86rem;
+      line-height:1.6;
+    }
+
+    .definition{
+      border-left:4px solid var(--rosa);
+      padding:16px 17px;
+      background:var(--rosa-claro);
+      border-radius:0 15px 15px 0;
+      color:#735866;
+      font-size:.9rem;
+      margin-top:18px;
+    }
+
+    /* LÍNEA DE TIEMPO */
+    .timeline{
+      margin-top:18px;
+      border-left:3px solid var(--azul-medio);
+      padding-left:18px;
+    }
+
+    .timeline-item{
+      position:relative;
+      margin-bottom:18px;
+    }
+
+    .timeline-item:last-child{margin-bottom:0}
+
+    .timeline-item::before{
+      content:"";
+      position:absolute;
+      left:-24px;
+      top:4px;
+      width:11px;
+      height:11px;
+      border-radius:50%;
+      background:var(--azul);
+      border:2px solid #fff;
+      box-shadow:0 0 0 2px var(--azul-medio);
+    }
+
+    .timeline-item b{
+      display:block;
+      color:var(--azul-oscuro);
+      font-family:"Montserrat",sans-serif;
+      font-size:.9rem;
+      margin-bottom:2px;
+    }
+
+    .timeline-item p{
+      font-size:.85rem;
+      color:var(--muted);
+    }
+
+    /* CIERRE */
+    .conclusion{
+      background:linear-gradient(135deg,#e8f8ff,#fff4f7);
+    }
+
+    .conclusion h2::before{background:var(--azul)}
+
+    /* BOTÓN REGRESAR */
+    .bottom-nav{
+      text-align:center;
+      padding:10px 0 0;
+    }
+
+    .main-button{
+      display:inline-flex;
+      align-items:center;
+      gap:10px;
+      padding:14px 23px;
+      border-radius:14px;
+      background:linear-gradient(135deg,var(--azul),#63b5d8);
+      color:white;
+      font-weight:800;
+      box-shadow:0 12px 25px rgba(86,170,207,.25);
+      transition:.25s ease;
+    }
+
+    .main-button:hover{
+      transform:translateY(-3px);
+      box-shadow:0 17px 32px rgba(86,170,207,.32);
+    }
+
+    footer{
+      border-top:1px solid var(--borde);
+      background:rgba(255,255,255,.7);
+      text-align:center;
+      padding:28px 20px;
+      color:#8298a3;
+      font-size:.78rem;
+    }
+
+    footer strong{color:#a46e82}
+
+    @media(max-width:800px){
+      .content-grid{grid-template-columns:1fr}
+      .flow{flex-wrap:wrap}
+      .arrow{display:none}
+      .flow-item{min-width:45%}
+      .pros-cons{grid-template-columns:1fr}
+    }
+
+    @media(max-width:560px){
+      .hero{padding:20px 16px 55px}
+      .back{margin-bottom:35px}
+      main{width:min(100% - 28px,1050px)}
+      .box{padding:22px 19px;border-radius:20px}
+      .concepts{grid-template-columns:1fr}
+      .flow-item{min-width:100%}
+      .hero h1{font-size:2.35rem}
+      .compare-table{font-size:.78rem}
+    }
+  </style>
+</head>
+
+<body>
+
+  <header class="hero">
+    <div class="hero-inner">
+
+      <!-- REGRESAR A LA PÁGINA PRINCIPAL -->
+      <a class="back" href="index.html">
+        ← Regresar al catálogo
+      </a>
+
+      <div class="badge">Card 01 · Conceptos Básicos</div>
+
+      <h1>
+        Conceptos básicos de la
+        <span>automatización</span>
+      </h1>
+
+      <p class="intro">
+        Antes de diseñar cualquier sistema automatizado es necesario comprender
+        su historia, sus ideas fundamentales, el ciclo que sigue todo proceso
+        automatizado y las ventajas, desventajas y diferencias que existen
+        entre automatizar la industria y automatizar los servicios.
+      </p>
+
+      <div class="student">
+        <span>👩‍💻 SONIA FERNANDA PEREZ SALAS</span>
+        <span>Inteligencia Artificial</span>
+        <span>5 A</span>
+      </div>
+
+    </div>
+  </header>
+
+  <main>
+
+    <div class="content-grid">
+
+      <div>
+
+        <!-- HISTORIA -->
+        <section class="box">
+          <h2>Historia de la automatización</h2>
+
+          <p>
+            La automatización no surgió de forma repentina, sino como resultado
+            de la evolución de la tecnología a lo largo de varios siglos. Desde
+            los primeros mecanismos simples hasta los sistemas inteligentes
+            actuales, el objetivo siempre ha sido el mismo: reducir el esfuerzo
+            humano y mejorar la precisión de los procesos.
+          </p>
+
+          <div class="timeline">
+            <div class="timeline-item">
+              <b>Revolución Industrial (siglo XVIII-XIX)</b>
+              <p>Aparecen las primeras máquinas mecánicas y sistemas de control simples, como el regulador centrífugo de Watt.</p>
+            </div>
+            <div class="timeline-item">
+              <b>Principios del siglo XX</b>
+              <p>Se desarrollan las líneas de producción en serie y los primeros relés eléctricos para el control industrial.</p>
+            </div>
+            <div class="timeline-item">
+              <b>Mediados del siglo XX</b>
+              <p>Surge la teoría de control y la retroalimentación, junto con los primeros controladores electrónicos.</p>
+            </div>
+            <div class="timeline-item">
+              <b>Décadas de 1970-1990</b>
+              <p>Llegan los microcontroladores, los PLC (controladores lógicos programables) y la robótica industrial.</p>
+            </div>
+            <div class="timeline-item">
+              <b>Actualidad</b>
+              <p>Se integran IoT, inteligencia artificial y plataformas como Arduino para automatizar tanto la industria como los servicios.</p>
+            </div>
+          </div>
+        </section>
+
+        <!-- INTRODUCCIÓN Y CONCEPTOS -->
+        <section class="box">
+          <h2>Introducción a los conceptos</h2>
+
+          <p>
+            La automatización es el uso de tecnologías, dispositivos y sistemas
+            de control para ejecutar tareas o procesos con poca o ninguna
+            intervención humana directa.
+          </p>
+
+          <p>
+            Comprender sus conceptos clave permite entender cómo un sistema
+            recibe información, la procesa y genera una respuesta de forma
+            organizada y repetible.
+          </p>
+
+          <div class="concepts">
+            <div class="concept">
+              <strong>⚙️ Proceso</strong>
+              <p>Conjunto de actividades que transforman entradas en resultados.</p>
+            </div>
+
+            <div class="concept">
+              <strong>📡 Sensor</strong>
+              <p>Dispositivo que detecta o mide una variable del entorno.</p>
+            </div>
+
+            <div class="concept">
+              <strong>🔌 Actuador</strong>
+              <p>Elemento que realiza una acción física a partir de una señal de control.</p>
+            </div>
+
+            <div class="concept">
+              <strong>🧠 Controlador</strong>
+              <p>Procesa información y determina las acciones que debe realizar el sistema.</p>
+            </div>
+
+            <div class="concept">
+              <strong>📊 Variable</strong>
+              <p>Magnitud que puede medirse o controlarse dentro de un proceso.</p>
+            </div>
+
+            <div class="concept">
+              <strong>🔄 Retroalimentación</strong>
+              <p>Información que regresa al sistema para comparar y ajustar el proceso.</p>
+            </div>
+          </div>
+
+          <div class="definition">
+            <strong>Idea principal:</strong> un sistema automatizado recibe
+            información del entorno, la procesa mediante un sistema de control
+            y genera una acción utilizando actuadores.
+          </div>
+        </section>
+
+        <!-- CICLO DE LA AUTOMATIZACIÓN -->
+        <section class="box">
+          <h2>Ciclo de la automatización</h2>
+
+          <p>
+            Todo sistema automatizado sigue un ciclo continuo que le permite
+            observar el proceso, tomar decisiones y actuar en consecuencia,
+            comparando siempre el resultado obtenido con el objetivo deseado.
+          </p>
+
+          <div class="flow">
+            <div class="flow-item">
+              <b>Sensado</b>
+              <small>Se detecta la variable</small>
+            </div>
+
+            <div class="arrow">→</div>
+
+            <div class="flow-item">
+              <b>Procesamiento</b>
+              <small>El controlador analiza el dato</small>
+            </div>
+
+            <div class="arrow">→</div>
+
+            <div class="flow-item">
+              <b>Decisión</b>
+              <small>Se compara con el valor deseado</small>
+            </div>
+
+            <div class="arrow">→</div>
+
+            <div class="flow-item">
+              <b>Actuación</b>
+              <small>El actuador ejecuta la acción</small>
+            </div>
+
+            <div class="arrow">→</div>
+
+            <div class="flow-item">
+              <b>Retroalimentación</b>
+              <small>El sistema vuelve a medir</small>
+            </div>
+          </div>
+
+          <div class="definition">
+            Este ciclo se repite constantemente, lo que permite que el sistema
+            se ajuste ante cambios en el proceso y mantenga estable la variable
+            controlada.
+          </div>
+        </section>
+
+        <!-- VENTAJAS Y DESVENTAJAS -->
+        <section class="box">
+          <h2>Ventajas y desventajas</h2>
+
+          <p>
+            Como toda tecnología, la automatización ofrece beneficios importantes,
+            pero también implica ciertos retos que deben considerarse antes de
+            implementarla en un proceso.
+          </p>
+
+          <div class="pros-cons">
+            <div class="pc-card pros">
+              <h3>✅ Ventajas</h3>
+              <ul>
+                <li>Aumenta la precisión y reduce errores humanos</li>
+                <li>Incrementa la productividad y la velocidad de los procesos</li>
+                <li>Permite trabajar en condiciones peligrosas o repetitivas</li>
+                <li>Facilita el monitoreo y control remoto</li>
+                <li>Reduce costos operativos a largo plazo</li>
+              </ul>
+            </div>
+
+            <div class="pc-card cons">
+              <h3>⚠️ Desventajas</h3>
+              <ul>
+                <li>Alta inversión inicial en equipos y desarrollo</li>
+                <li>Requiere mantenimiento técnico especializado</li>
+                <li>Puede generar dependencia tecnológica</li>
+                <li>Riesgo de desplazamiento de mano de obra</li>
+                <li>Vulnerabilidad ante fallas eléctricas o de conexión</li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        <!-- DIFERENCIAS -->
+        <section class="box">
+          <h2>Automatización industrial vs. de servicios</h2>
+
+          <p>
+            Aunque comparten los mismos principios (sensores, controladores y
+            actuadores), la automatización industrial y la de servicios se
+            aplican en contextos distintos y con objetivos diferentes.
+          </p>
+
+          <table class="compare-table">
+            <thead>
+              <tr>
+                <th>Aspecto</th>
+                <th>Industrial</th>
+                <th>Servicios</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Objetivo</td>
+                <td>Optimizar la producción y manufactura</td>
+                <td>Mejorar la atención y experiencia del usuario</td>
+              </tr>
+              <tr>
+                <td>Entorno</td>
+                <td>Fábricas y líneas de producción</td>
+                <td>Oficinas, hogares, comercios</td>
+              </tr>
+              <tr>
+                <td>Ejemplos</td>
+                <td>Brazos robóticos, bandas transportadoras</td>
+                <td>Cajeros automáticos, chatbots, hogares inteligentes</td>
+              </tr>
+              <tr>
+                <td>Variables comunes</td>
+                <td>Presión, temperatura, velocidad</td>
+                <td>Tiempo de respuesta, disponibilidad, seguridad</td>
+              </tr>
+              <tr>
+                <td>Escala</td>
+                <td>Procesos de gran volumen y repetición</td>
+                <td>Procesos más personalizados y variables</td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+
+      </div>
+
+      <aside>
+
+        <!-- SISTEMAS DE CONTROL -->
+        <section class="box">
+          <div class="side-title">Elemento fundamental</div>
+          <div class="mini">
+            <h3>🧠 Sistemas de control</h3>
+            <p>
+              Un sistema de control coordina las diferentes partes de un proceso
+              para alcanzar un objetivo determinado. Puede recibir datos,
+              compararlos con una condición establecida y generar una respuesta.
+            </p>
+          </div>
+
+          <div class="mini">
+            <h3>Control automático</h3>
+            <p>
+              Permite que determinadas acciones se realicen automáticamente
+              cuando se cumplen ciertas condiciones, sin intervención manual
+              constante.
+            </p>
+          </div>
+        </section>
+
+        <!-- ARDUINO -->
+        <section class="box">
+          <div class="side-title">Tecnología</div>
+          <div class="mini">
+            <h3>🤖 Arduino</h3>
+            <p>
+              Arduino es una plataforma utilizada para desarrollar proyectos
+              electrónicos y sistemas interactivos. Puede leer información de
+              sensores y controlar componentes como LEDs, motores y otros
+              actuadores.
+            </p>
+          </div>
+
+          <div class="definition">
+            Arduino puede funcionar como parte del sistema de control de un
+            proyecto de automatización.
+          </div>
+        </section>
+
+        <!-- IOT -->
+        <section class="box">
+          <div class="side-title">Conectividad</div>
+          <div class="mini">
+            <h3>🌐 Internet de las Cosas (IoT)</h3>
+            <p>
+              El IoT permite conectar dispositivos a redes para intercambiar
+              información. En automatización puede utilizarse para monitorear
+              variables, enviar datos y controlar dispositivos de manera remota.
+            </p>
+          </div>
+        </section>
+
+        <!-- SECTORES -->
+        <section class="box">
+          <div class="side-title">Sectores</div>
+          <div class="mini">
+            <h3>🏭 Sector industrial</h3>
+            <p>
+              Manufactura, control de calidad, logística y líneas de ensamble.
+            </p>
+          </div>
+          <div class="mini">
+            <h3>🏢 Sector servicios</h3>
+            <p>
+              Banca, salud, comercio, hogares inteligentes y atención al cliente.
+            </p>
+          </div>
+        </section>
+
+      </aside>
+
+    </div>
+
+    <!-- CONCLUSIÓN -->
+    <section class="box conclusion">
+      <h2>Conclusión</h2>
+
+      <p>
+        Conocer la historia de la automatización, sus conceptos básicos y el
+        ciclo que sigue todo sistema automatizado permite entender por qué esta
+        tecnología ha transformado tanto a la industria como a los servicios.
+      </p>
+
+      <p>
+        Aunque presenta ventajas claras en productividad y precisión, también
+        implica retos como la inversión inicial y el mantenimiento. Distinguir
+        entre automatización industrial y de servicios ayuda a elegir las
+        herramientas y estrategias adecuadas según el contexto de aplicación.
+      </p>
+    </section>
+
+    <div class="bottom-nav">
+      <a class="main-button" href="index.html">
+        ← Volver a la página principal
+      </a>
+    </div>
+
+  </main>
+
+  <footer>
+    <strong>SONIA FERNANDA PEREZ SALAS</strong> · Inteligencia Artificial · 5 A<br>
+    Card 01 · Conceptos básicos de automatización
+  </footer>
+
+</body>
+</html>

@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bitácora de Circuitos — Arduino</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg: #201510;
+    --panel: #2a1c15;
+    --panel-raised: #331f16;
+    --line: #4a3324;
+    --copper: #cf7f3f;
+    --teal: #c15a2e;
+    --led-green: #d9a13f;
+    --led-amber: #e2a63f;
+    --led-red: #b23a2c;
+    --text: #f2e6d6;
+    --muted: #b08c72;
+    --mono: 'IBM Plex Mono', monospace;
+    --sans: 'Space Grotesk', sans-serif;
+  }
+
+  *{ box-sizing: border-box; }
+
+  html,body{
+    margin:0;
+    padding:0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--sans);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  body{
+    background-image: radial-gradient(circle, rgba(234,230,218,0.05) 1px, transparent 1.3px);
+    background-size: 22px 22px;
+  }
+
+  .wrap{
+    max-width: 980px;
+    margin: 0 auto;
+    padding: 56px 24px 90px;
+  }
+
+  header.page{
+    margin-bottom: 56px;
+    border-bottom: 1px solid var(--line);
+    padding-bottom: 32px;
+  }
+
+  .rail{
+    display:flex;
+    gap:6px;
+    margin-bottom:22px;
+  }
+  .rail span{
+    width: 26px;
+    height: 5px;
+    border-radius: 3px;
+    background: var(--line);
+  }
+  .rail span:nth-child(1){ background: var(--led-green); }
+  .rail span:nth-child(2){ background: var(--teal); }
+  .rail span:nth-child(3){ background: var(--led-red); }
+
+  .back-link{
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-family: var(--mono);
+    font-size: 0.78rem;
+    color: var(--muted);
+    text-decoration: none;
+    border: 1px solid var(--line);
+    padding: 8px 14px;
+    border-radius: 20px;
+    margin-bottom: 26px;
+    transition: color 0.15s ease, border-color 0.15s ease;
+  }
+  .back-link:hover{
+    color: var(--copper);
+    border-color: var(--copper);
+  }
+  .back-link svg{
+    width: 13px;
+    height: 13px;
+    flex-shrink: 0;
+  }
+
+  h1{
+    font-size: clamp(2rem, 4.2vw, 3rem);
+    font-weight: 600;
+    line-height: 1.08;
+    margin: 0 0 14px;
+    letter-spacing: -0.01em;
+    max-width: 16ch;
+  }
+
+  header.page p{
+    color: var(--muted);
+    font-size: 1.05rem;
+    max-width: 54ch;
+    line-height: 1.55;
+    margin: 0;
+  }
+
+  .card{
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    margin-bottom: 40px;
+    overflow: hidden;
+    position: relative;
+  }
+
+  .card::before{
+    content:"";
+    position:absolute;
+    left:0; top:0; bottom:0;
+    width: 4px;
+  }
+  .card.humo::before{ background: var(--led-green); }
+  .card.motor::before{ background: var(--teal); }
+  .card.temp::before{ background: var(--led-red); }
+
+  .card-head{
+    padding: 28px 32px 20px 34px;
+    display:flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 20px;
+    flex-wrap: wrap;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .card-head .num{
+    font-family: var(--mono);
+    font-size: 0.78rem;
+    color: var(--muted);
+    letter-spacing: 0.04em;
+    display:block;
+    margin-bottom: 8px;
+  }
+
+  .card-head h2{
+    font-size: 1.5rem;
+    margin: 0 0 6px;
+    font-weight: 600;
+  }
+
+  .card-head .desc{
+    color: var(--muted);
+    font-size: 0.94rem;
+    max-width: 46ch;
+    line-height: 1.5;
+    margin: 0;
+  }
+
+  .chips{
+    display:flex;
+    gap:8px;
+    flex-wrap: wrap;
+  }
+  .chip{
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    padding: 5px 10px;
+    border-radius: 20px;
+    border: 1px solid var(--line);
+    color: var(--muted);
+    white-space: nowrap;
+  }
+
+  .media{
+    display: grid;
+    grid-template-columns: 1fr 1.3fr;
+    gap: 1px;
+    background: var(--line);
+  }
+  @media (max-width: 720px){
+    .media{ grid-template-columns: 1fr; }
+  }
+
+  .media figure{
+    margin:0;
+    background: var(--panel);
+    padding: 18px;
+  }
+
+  .media img, .media video{
+    width: 100%;
+    height: auto;
+    display:block;
+    border-radius: 6px;
+    background: #170f0a;
+  }
+
+  .media figcaption{
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    color: var(--muted);
+    margin-top: 10px;
+    letter-spacing: 0.02em;
+  }
+
+  .code-panel{
+    background: #170f0a;
+    margin: 0;
+    padding: 0;
+  }
+
+  .code-panel .term-bar{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    padding: 12px 18px;
+    border-bottom: 1px solid var(--line);
+  }
+  .term-bar .dots{ display:flex; gap:6px; }
+  .term-bar .dots i{
+    width:9px; height:9px; border-radius:50%;
+    background: var(--line);
+    display:inline-block;
+  }
+  .term-bar .label{
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    color: var(--muted);
+    margin-left: 4px;
+  }
+
+  pre{
+    margin:0;
+    padding: 22px 28px 28px;
+    overflow-x: auto;
+    font-family: var(--mono);
+    font-size: 0.83rem;
+    line-height: 1.65;
+    color: #eddac0;
+  }
+  pre .kw{ color: var(--teal); }
+  pre .cm{ color: var(--muted); font-style: italic; }
+  pre .fn{ color: var(--led-amber); }
+  pre .nu{ color: var(--led-red); }
+
+  footer.page{
+    margin-top: 30px;
+    color: var(--muted);
+    font-size: 0.82rem;
+    font-family: var(--mono);
+    border-top: 1px solid var(--line);
+    padding-top: 20px;
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="page">
+    <a class="back-link" href="index.html">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+      volver al índice
+    </a>
+    <div class="rail"><span></span><span></span><span></span></div>
+    <h1>Bitácora de circuitos con Arduino</h1>
+    <p>Tres montajes documentados con su diagrama, video de funcionamiento y código fuente: detección de humo, control de un motor DC y monitoreo de temperatura.</p>
+  </header>
+
+  <!-- CIRCUITO 1: DETECTOR DE HUMO -->
+  <section class="card humo">
+    <div class="card-head">
+      <div>
+        <span class="num">CIRCUITO 01</span>
+        <h2>Detector de humo y gas (MQ‑2)</h2>
+        <p class="desc">Sensor de gas MQ‑2, tres LEDs de estado (verde / amarillo / rojo) y un buzzer de alarma según el nivel de humo detectado.</p>
+      </div>
+      <div class="chips">
+        <span class="chip">MQ‑2</span>
+        <span class="chip">3× LED</span>
+        <span class="chip">buzzer</span>
+      </div>
+    </div>
+
+    <div class="media">
+      <figure>
+        <img src="humo.JPEG" alt="Diagrama del circuito detector de humo">
+        <figcaption>// diagrama del montaje</figcaption>
+      </figure>
+      <figure>
+        <video src="videoh.mp4" controls preload="metadata"></video>
+        <figcaption>// video de funcionamiento</figcaption>
+      </figure>
+    </div>
+
+    <div class="code-panel">
+      <div class="term-bar">
+        <div class="dots"><i></i><i></i><i></i></div>
+        <span class="label">detector_humo.ino</span>
+      </div>
+      <pre><span class="cm">// C++ code</span>
+<span class="kw">int</span> humo;
+<span class="kw">int</span> rojo=11;
+<span class="kw">int</span> amarillo=12;
+<span class="kw">int</span> verde=13;
+<span class="kw">int</span> alarma =10;
+
+<span class="kw">void</span> <span class="fn">setup</span>()
+{
+  Serial.<span class="fn">begin</span>(<span class="nu">9600</span>); <span class="cm">//usar monitor en serie</span>
+  pinMode(rojo,OUTPUT);<span class="cm">// salidas led</span>
+  pinMode(amarillo,OUTPUT);
+  pinMode(verde,OUTPUT);
+  pinMode(alarma,OUTPUT);<span class="cm">//salida alarma</span>
+}
+
+<span class="kw">void</span> <span class="fn">loop</span>()
+{
+  humo = <span class="fn">analogRead</span>(A5);
+
+  <span class="kw">if</span> (humo&lt;<span class="nu">930</span>)
+  {
+    digitalWrite(verde,HIGH);
+    digitalWrite(amarillo,LOW);
+    digitalWrite(rojo,LOW);
+    noTone(alarma);
+    Serial.println(<span class="cm">"ESTAS FUERA DE PELIGRO"</span>);
+    delay(<span class="nu">500</span>);
+  }
+
+  <span class="kw">if</span> ((humo&gt;<span class="nu">930</span>) and (humo&lt;<span class="nu">960</span>))
+  {
+    digitalWrite(verde,LOW);
+    digitalWrite(amarillo,HIGH);
+    digitalWrite(rojo,LOW);
+    noTone(alarma);
+    Serial.println(<span class="cm">" OJO! EL PELIGRO SE ACERCA"</span>);
+    delay(<span class="nu">500</span>);
+  }
+
+  <span class="kw">if</span> (humo&gt;<span class="nu">960</span>)
+  {
+    digitalWrite(verde,LOW);
+    digitalWrite(amarillo,LOW);
+    digitalWrite(rojo,HIGH);
+    tone(alarma,<span class="nu">440</span>);
+    Serial.println(<span class="cm">"ESTAS EN PELIGRO"</span>);
+    delay(<span class="nu">500</span>);
+  }
+}</pre>
+    </div>
+  </section>
+
+  <!-- CIRCUITO 2: MOTOR -->
+  <section class="card motor">
+    <div class="card-head">
+      <div>
+        <span class="num">CIRCUITO 02</span>
+        <h2>Control de motor DC</h2>
+        <p class="desc">Motorreductor accionado mediante transistor, con pulsadores y resistencias sobre protoboard, alimentado por una batería de 9V.</p>
+      </div>
+      <div class="chips">
+        <span class="chip">motor DC</span>
+        <span class="chip">2× pulsador</span>
+        <span class="chip">9V</span>
+      </div>
+    </div>
+
+    <div class="media">
+      <figure>
+        <img src="circuito.JPEG" alt="Diagrama del circuito de control de motor">
+        <figcaption>// diagrama del montaje</figcaption>
+      </figure>
+      <figure>
+        <video src="cirv.mp4" controls preload="metadata"></video>
+        <figcaption>// video de funcionamiento</figcaption>
+      </figure>
+    </div>
+
+    <div class="code-panel">
+      <div class="term-bar">
+        <div class="dots"><i></i><i></i><i></i></div>
+        <span class="label">motor.ino</span>
+      </div>
+      <pre><span class="cm">// C++ code</span>
+
+<span class="kw">void</span> <span class="fn">setup</span>()
+{
+  pinMode(LED_BUILTIN, OUTPUT);
+}
+
+<span class="kw">void</span> <span class="fn">loop</span>()
+{
+  digitalWrite(LED_BUILTIN, HIGH);
+  delay(<span class="nu">1000</span>); <span class="cm">// Wait for 1000 millisecond(s)</span>
+  digitalWrite(LED_BUILTIN, LOW);
+  delay(<span class="nu">1000</span>); <span class="cm">// Wait for 1000 millisecond(s)</span>
+}</pre>
+    </div>
+  </section>
+
+  <!-- CIRCUITO 3: SENSOR DE TEMPERATURA -->
+  <section class="card temp">
+    <div class="card-head">
+      <div>
+        <span class="num">CIRCUITO 03</span>
+        <h2>Sensor de temperatura (TMP36)</h2>
+        <p class="desc">Lectura de temperatura con sensor TMP36 en A0; al superar 50 °C se enciende un LED y se activa un zumbador de aviso.</p>
+      </div>
+      <div class="chips">
+        <span class="chip">TMP36</span>
+        <span class="chip">LED</span>
+        <span class="chip">buzzer</span>
+      </div>
+    </div>
+
+    <div class="media">
+      <figure>
+        <img src="foto3.JPEG" alt="Diagrama del circuito con sensor de temperatura">
+        <figcaption>// diagrama del montaje</figcaption>
+      </figure>
+      <figure>
+        <video src="video3.mp4" controls preload="metadata"></video>
+        <figcaption>// video de funcionamiento</figcaption>
+      </figure>
+    </div>
+
+    <div class="code-panel">
+      <div class="term-bar">
+        <div class="dots"><i></i><i></i><i></i></div>
+        <span class="label">temperatura.ino</span>
+      </div>
+      <pre><span class="cm">// C++ code
+/*
+  Realizado por Luis Manuel Giraldo Arias
+  Profesor David Martínez
+  Curso Arduino en Arte Mecatrónica
+  Junio 1 de 2020
+  Lectura de sensor de temperatura, led que
+  enciende y zumbador
+*/</span>
+<span class="kw">void</span> <span class="fn">setup</span>()
+{
+  pinMode(A0, INPUT);
+  pinMode(<span class="nu">8</span>, OUTPUT);
+  pinMode(<span class="nu">13</span>, OUTPUT);
+  Serial.<span class="fn">begin</span>(<span class="nu">9600</span>);
+}
+
+<span class="kw">void</span> <span class="fn">loop</span>()
+{
+  <span class="kw">if</span> ((<span class="nu">-40</span> + <span class="nu">0.488155</span> * (analogRead(A0) - <span class="nu">20</span>)) &gt;= <span class="nu">50</span>) {
+    <span class="cm">//  Se lee sensor de temperatura y se compara con 50
+    // Si es mayor o igual a 50 enciende led y se activa zumbador</span>
+    digitalWrite(<span class="nu">8</span>, HIGH);
+    digitalWrite(<span class="nu">13</span>, HIGH);
+  } <span class="kw">else</span> {
+    <span class="cm">// Si lectura de sensor es menor de 50 no se enciende led ni zumbador</span>
+    digitalWrite(<span class="nu">8</span>, LOW);
+    digitalWrite(<span class="nu">13</span>, LOW);
+  }
+  delay(<span class="nu">300</span>); <span class="cm">// Wait for 300 millisecond(s)</span>
+  Serial.println((<span class="nu">-40</span> + <span class="nu">0.488155</span> * (analogRead(A0) - <span class="nu">20</span>)));
+}</pre>
+    </div>
+  </section>
+
+  <footer class="page">arduino · protoboard · sensores — bitácora de proyectos</footer>
+
+</div>
+</body>
+</html>

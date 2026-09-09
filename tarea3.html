@@ -1,0 +1,956 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tarea 02 | Sistema Automatizado de Detección y Control de Incendios</title>
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+:root{
+    --cafe:#1b4965;
+    --terracota:#4a90b8;
+    --naranja:#7fb8d9;
+    --crema:#eef6fb;
+    --arena:#d7ebf6;
+    --texto:#1e3a4c;
+    --blanco:#ffffff;
+    --malva:#a9739a;
+    --sombra:rgba(27,73,101,.14);
+}
+
+html{
+    scroll-behavior:smooth;
+}
+
+body{
+    font-family:"Segoe UI",Tahoma,Geneva,Verdana,sans-serif;
+    color:var(--texto);
+    background:linear-gradient(135deg,#eef6fb,#dceefa);
+    min-height:100vh;
+    line-height:1.7;
+}
+
+/* BARRA SUPERIOR */
+.navbar{
+    position:sticky;
+    top:0;
+    z-index:10;
+    background:rgba(92,52,37,.97);
+    padding:14px 5%;
+    box-shadow:0 4px 15px rgba(0,0,0,.15);
+}
+
+.nav-content{
+    max-width:1150px;
+    margin:auto;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:15px;
+}
+
+.logo{
+    color:white;
+    font-weight:800;
+    font-size:1.05rem;
+}
+
+.inicio{
+    display:inline-block;
+    color:white;
+    background:var(--terracota);
+    text-decoration:none;
+    padding:9px 16px;
+    border-radius:10px;
+    font-weight:700;
+    transition:.25s;
+}
+
+.inicio:hover{
+    background:var(--naranja);
+    transform:translateY(-2px);
+}
+
+/* ENCABEZADO */
+.hero{
+    padding:75px 20px;
+    text-align:center;
+    background:
+        radial-gradient(circle at top left,rgba(255,255,255,.42),transparent 35%),
+        linear-gradient(135deg,#1b4965 0%,#5fa8d3 55%,#a9739a 100%);
+    color:white;
+}
+
+.hero .icono{
+    font-size:clamp(3rem,10vw,5.5rem);
+    margin-bottom:10px;
+}
+
+.hero h1{
+    max-width:950px;
+    margin:auto;
+    font-size:clamp(2rem,6vw,4rem);
+    line-height:1.1;
+    text-shadow:2px 3px 8px rgba(0,0,0,.22);
+}
+
+.hero p{
+    max-width:800px;
+    margin:18px auto 0;
+    font-size:clamp(1rem,2.5vw,1.2rem);
+}
+
+/* CONTENIDO */
+.contenedor{
+    width:min(1050px,94%);
+    margin:auto;
+    padding:55px 0;
+}
+
+.info-alumno{
+    background:white;
+    padding:22px;
+    border-radius:18px;
+    box-shadow:0 8px 24px var(--sombra);
+    text-align:center;
+    margin-bottom:30px;
+}
+
+.info-alumno strong{
+    color:var(--malva);
+}
+
+.seccion{
+    background:white;
+    margin-bottom:28px;
+    padding:30px;
+    border-radius:22px;
+    box-shadow:0 8px 25px var(--sombra);
+    border-left:6px solid var(--terracota);
+}
+
+.seccion h2{
+    color:var(--cafe);
+    font-size:clamp(1.5rem,4vw,2.2rem);
+    margin-bottom:15px;
+}
+
+.seccion h3{
+    color:var(--terracota);
+    font-size:1.25rem;
+    margin:20px 0 8px;
+}
+
+.seccion p{
+    color:#4a5c68;
+}
+
+.lista{
+    padding-left:25px;
+    margin-top:12px;
+}
+
+.lista li{
+    margin-bottom:10px;
+    color:#4a5c68;
+}
+
+.conceptos-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+    gap:18px;
+    margin-top:20px;
+}
+
+.concepto{
+    background:var(--crema);
+    border-radius:16px;
+    padding:20px;
+    border:1px solid var(--arena);
+    transition:.25s;
+}
+
+.concepto:hover{
+    transform:translateY(-4px);
+    box-shadow:0 8px 18px var(--sombra);
+}
+
+.concepto .emoji{
+    font-size:2rem;
+}
+
+.concepto h3{
+    margin:8px 0;
+}
+
+.concepto p{
+    font-size:.95rem;
+}
+
+/* FLUJO */
+.flujo{
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    flex-wrap:wrap;
+    gap:10px;
+    margin-top:25px;
+}
+
+.paso{
+    background:linear-gradient(135deg,#5fa8d3,#1b4965);
+    color:white;
+    padding:15px 18px;
+    border-radius:14px;
+    font-weight:800;
+    text-align:center;
+    box-shadow:0 5px 12px var(--sombra);
+}
+
+.flecha{
+    font-size:1.5rem;
+    color:var(--terracota);
+    font-weight:bold;
+}
+
+/* CAJA DESTACADA */
+.destacado{
+    background:linear-gradient(135deg,#eaf5fb,#5fa8d3);
+    border-radius:18px;
+    padding:22px;
+    margin-top:18px;
+    border:1px solid #bcdff5;
+}
+
+.destacado strong{
+    color:var(--cafe);
+}
+
+/* BOTÓN FINAL */
+.volver{
+    text-align:center;
+    margin:40px 0 10px;
+}
+
+.volver a{
+    display:inline-block;
+    text-decoration:none;
+    background:var(--cafe);
+    color:white;
+    padding:14px 24px;
+    border-radius:12px;
+    font-weight:800;
+    transition:.25s;
+}
+
+.volver a:hover{
+    background:var(--terracota);
+    transform:translateY(-2px);
+}
+
+/* FOOTER */
+footer{
+    text-align:center;
+    background:#153349;
+    color:#cfe8f5;
+    padding:28px 20px;
+}
+
+
+/* GALERÍA DE IMÁGENES */
+.galeria-grid{
+    display:grid;
+    grid-template-columns:repeat(2,minmax(0,1fr));
+    gap:22px;
+    margin-top:22px;
+}
+.galeria-card{
+    overflow:hidden;
+    background:var(--crema);
+    border:1px solid var(--arena);
+    border-radius:18px;
+    box-shadow:0 7px 20px var(--sombra);
+    transition:.25s;
+}
+.galeria-card:hover{
+    transform:translateY(-4px);
+    box-shadow:0 10px 24px var(--sombra);
+}
+.galeria-card img{
+    display:block;
+    width:100%;
+    height:300px;
+    object-fit:cover;
+    background:#eee;
+}
+.galeria-placeholder{
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    gap:10px;
+    width:100%;
+    height:300px;
+    background:linear-gradient(135deg,#eaf4fb,#dceefa);
+    border-bottom:1px solid var(--arena);
+    font-size:3rem;
+    color:var(--terracota);
+    text-align:center;
+    padding:15px;
+}
+.galeria-placeholder span{
+    font-size:.95rem;
+    font-weight:700;
+    color:var(--marino, #1b4965);
+}
+.galeria-info{
+    padding:16px 18px 18px;
+}
+.galeria-info h3{
+    margin:0 0 5px;
+    color:var(--malva);
+}
+.galeria-info p{
+    margin:0;
+    font-size:.95rem;
+}
+@media(max-width:650px){
+    .galeria-grid{
+        grid-template-columns:1fr;
+    }
+    .galeria-card img{
+        height:auto;
+        max-height:none;
+        object-fit:contain;
+    }
+    .galeria-placeholder{
+        height:220px;
+    }
+}
+
+/* RESPONSIVE */
+@media(max-width:650px){
+    .nav-content{
+        flex-direction:column;
+    }
+
+    .navbar{
+        position:relative;
+    }
+
+    .hero{
+        padding:55px 15px;
+    }
+
+    .contenedor{
+        width:92%;
+        padding:35px 0;
+    }
+
+    .seccion{
+        padding:22px 18px;
+    }
+
+    .flujo{
+        flex-direction:column;
+    }
+
+    .flecha{
+        transform:rotate(90deg);
+    }
+}
+</style>
+</head>
+
+<body>
+
+<!-- BARRA DE NAVEGACIÓN -->
+<nav class="navbar">
+    <div class="nav-content">
+        <div class="logo">🔥🚨 Automatización · 5.-A IA</div>
+
+        <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;justify-content:center;">
+            <a class="inicio" href="#galeria">🖼️ Galería</a>
+            <a class="inicio" href="index.html">🏠 Página principal</a>
+        </div>
+    </div>
+</nav>
+
+<!-- ENCABEZADO -->
+<header class="hero">
+    <div class="icono">🔥🚨🤖</div>
+
+    <h1>
+        Sistema Automatizado de Detección y Control de Incendios
+    </h1>
+
+    <p>
+        Tarea 02 · Proyecto con Arduino, sensores y alarmas
+    </p>
+</header>
+
+<main class="contenedor">
+
+    <!-- DATOS DEL EQUIPO -->
+    <section class="info-alumno">
+        <p>
+            <strong>Docente:</strong> Jordy Chirino Balcázar
+            &nbsp; | &nbsp;
+            <strong>Especialidad:</strong> IA
+            &nbsp; | &nbsp;
+            <strong>Grado y grupo:</strong> 5.-A
+        </p>
+        <p style="margin-top:10px;">
+            <strong>Integrantes:</strong>
+            Álvarez García Blanca Mariana, Castillo Ovando Manuel,
+            Hernández Hernández Brandon Gabriel, Pérez Salas Sonia Fernanda
+            y Sánchez Rodríguez Barbara Raquel.
+        </p>
+    </section>
+
+    <!-- PROBLEMA O NECESIDAD -->
+    <section class="seccion">
+        <h2>🚩 Problema o necesidad</h2>
+
+        <h3>Situación actual</h3>
+        <p>
+            Los incendios pueden comenzar de forma inesperada y, si no se
+            detectan a tiempo, pueden causar daños materiales y poner en
+            riesgo a las personas. La detección manual depende de que alguien
+            se encuentre cerca y pueda identificar el humo o el fuego.
+        </p>
+
+        <h3>Necesidad detectada</h3>
+        <p>
+            Se necesita un sistema que detecte automáticamente la presencia
+            de humo o fuego y avise cuando exista un posible incendio,
+            permitiendo actuar con mayor rapidez.
+        </p>
+
+        <h3>Razón para automatizar</h3>
+        <p>
+            Automatizar este proceso permite vigilar constantemente el área y
+            generar una alerta sin intervención humana. Arduino recibe la
+            información de los sensores y, cuando detecta una situación de
+            riesgo, activa el buzzer, los LEDs y muestra el estado en la
+            pantalla LCD.
+        </p>
+    </section>
+
+    <!-- JUSTIFICACIÓN -->
+    <section class="seccion">
+        <h2>📋 Justificación del proyecto</h2>
+
+        <p>
+            El proyecto se realiza con el propósito de desarrollar un Sistema
+            Automatizado de Detección y Control de Incendios con Arduino,
+            capaz de detectar la presencia de humo o fuego y generar una
+            alerta de manera rápida.
+        </p>
+
+        <p style="margin-top:14px;">
+            El sistema utiliza sensores de humo y fuego para identificar una
+            posible situación de riesgo. Cuando se detecta una condición
+            anormal, Arduino procesa la información y activa diferentes
+            medios de alerta, como un buzzer, LEDs y una pantalla LCD, donde
+            se puede visualizar el estado del sistema.
+        </p>
+
+        <div class="destacado">
+            <strong>Importancia:</strong>
+            la implementación de este proyecto permite demostrar cómo la
+            automatización puede utilizarse para mejorar la seguridad y
+            prevenir daños, reduciendo el tiempo de respuesta ante un posible
+            incendio y facilitando que las personas sean alertadas
+            oportunamente.
+        </div>
+    </section>
+
+    <!-- OBJETIVOS Y METAS -->
+    <section class="seccion">
+        <h2>🎯 Objetivo general</h2>
+
+        <p>
+            Desarrollar un Sistema Automatizado de Detección y Control de
+            Incendios con Arduino, capaz de monitorear constantemente un
+            espacio y detectar la presencia de humo o fuego mediante
+            sensores. Al identificar una posible situación de riesgo, el
+            sistema deberá activar automáticamente alarmas visuales y
+            sonoras, además de mostrar el estado del sistema mediante una
+            pantalla LCD.
+        </p>
+
+        <p style="margin-top:14px;">
+            El proyecto busca integrar diferentes componentes electrónicos y
+            de programación para crear un prototipo funcional de seguridad,
+            demostrando cómo la automatización puede utilizarse para detectar
+            de manera oportuna una situación de incendio y generar una
+            respuesta inmediata.
+        </p>
+
+        <h3>Resultado principal esperado</h3>
+        <p>
+            Obtener una maqueta funcional de un sistema de detección de
+            incendios, en la que los sensores, Arduino, LEDs, buzzer y
+            pantalla LCD trabajen de manera coordinada, reconociendo la
+            condición de riesgo y activando las alertas correspondientes.
+        </p>
+
+        <h3>Meta del proyecto</h3>
+        <p>
+            Diseñar, construir y comprobar el funcionamiento de un prototipo
+            automatizado de detección de incendios, utilizando componentes
+            electrónicos accesibles y una programación adecuada. Se pretende
+            lograr que el sistema:
+        </p>
+
+        <ul class="lista">
+            <li>Detecte la presencia de humo y fuego mediante sensores.</li>
+            <li>Procese la información recibida utilizando Arduino.</li>
+            <li>Active automáticamente una alarma sonora mediante el buzzer.</li>
+            <li>Encienda señales luminosas mediante LEDs para indicar el nivel de riesgo.</li>
+            <li>Muestre en la pantalla LCD información sobre el estado del sistema.</li>
+            <li>Mantenga un monitoreo constante del área.</li>
+        </ul>
+    </section>
+
+    <!-- OBJETIVOS ESPECÍFICOS Y METAS ALCANZABLES -->
+    <section class="seccion">
+        <h2>📌 Objetivos específicos</h2>
+
+        <ul class="lista">
+            <li>Diseñar un sistema de detección de incendios utilizando Arduino y sensores de humo y fuego.</li>
+            <li>Integrar los sensores, LEDs, buzzer y pantalla LCD para que funcionen de manera coordinada.</li>
+            <li>Programar el Arduino para identificar diferentes situaciones de riesgo y activar automáticamente las alarmas correspondientes.</li>
+            <li>Construir una maqueta que represente el funcionamiento del sistema automatizado dentro de una vivienda.</li>
+            <li>Realizar pruebas para comprobar que los sensores y las alarmas respondan correctamente ante la detección de humo o fuego.</li>
+        </ul>
+
+        <h3>Metas alcanzables del proyecto</h3>
+        <p>Para alcanzar el objetivo general, el proyecto se dividió en las siguientes metas:</p>
+
+        <ol class="lista">
+            <li><strong>Diseño y planificación:</strong> definir el funcionamiento del sistema, seleccionar los componentes necesarios y establecer cómo estarán conectados.</li>
+            <li><strong>Instalación de componentes:</strong> conectar correctamente Arduino, sensores, LEDs, buzzer y pantalla LCD, verificando que cada componente funcione de manera individual.</li>
+            <li><strong>Programación:</strong> crear y cargar el programa en Arduino para que pueda recibir la información de los sensores, identificar situaciones de riesgo y activar las alertas.</li>
+            <li><strong>Construcción de la maqueta:</strong> integrar el circuito electrónico en la maqueta de la vivienda, colocando los sensores y dispositivos de alerta en lugares adecuados.</li>
+            <li><strong>Pruebas y funcionamiento:</strong> realizar diferentes pruebas de detección para comprobar que el sistema detecte el riesgo, active las alarmas y muestre correctamente el estado en la pantalla LCD.</li>
+        </ol>
+    </section>
+
+    <!-- ENTRADAS Y SALIDAS -->
+    <section class="seccion">
+        <h2>🔀 Entradas y salidas del sistema</h2>
+
+        <h3>Información que recibe el sistema (entradas)</h3>
+        <ul class="lista">
+            <li>Sensor de humo: detecta la presencia de humo en el ambiente.</li>
+            <li>Sensor de temperatura: mide la temperatura y detecta aumentos peligrosos.</li>
+            <li>Sensor de flama: identifica la presencia de fuego.</li>
+            <li>Botón de emergencia: permite activar manualmente la alarma.</li>
+            <li>Botón de reinicio: permite restablecer el sistema después de una emergencia.</li>
+            <li>Sensores adicionales: pueden detectar movimiento, apertura de puertas u otras condiciones.</li>
+        </ul>
+
+        <h3>Acciones que ejecuta el sistema (salidas)</h3>
+        <p>El Arduino analiza las señales de los sensores y, dependiendo de los valores detectados:</p>
+        <ul class="lista">
+            <li>Activa una sirena o buzzer cuando detecta una situación de peligro.</li>
+            <li>Enciende LEDs de alerta para indicar el estado del sistema.</li>
+            <li>Muestra información en una pantalla LCD.</li>
+            <li>Activa un sistema de rociadores o bomba de agua, si el proyecto cuenta con él.</li>
+            <li>Puede activar un servo o mecanismo para abrir una salida de emergencia.</li>
+            <li>Puede enviar una señal a otro sistema de alarma.</li>
+        </ul>
+    </section>
+
+    <!-- SENSORES Y ACTUADORES -->
+    <section class="seccion">
+        <h2>🔧 Selección de sensores y actuadores</h2>
+
+        <p>
+            Para desarrollar el sistema se seleccionaron componentes que
+            permiten detectar una posible situación de incendio y generar una
+            respuesta automática. Cada componente cumple una función
+            específica dentro del sistema.
+        </p>
+
+        <div class="conceptos-grid">
+
+            <article class="concepto">
+                <div class="emoji">💨</div>
+                <h3>Sensor de humo MQ-2</h3>
+                <p>
+                    Detecta humo y diferentes gases presentes en el ambiente.
+                    Se eligió porque permite detectar la presencia de humo de
+                    manera rápida y es compatible con Arduino.
+                </p>
+            </article>
+
+            <article class="concepto">
+                <div class="emoji">🔥</div>
+                <h3>Sensor de fuego o llama</h3>
+                <p>
+                    Detecta la presencia de una fuente de llama mediante un
+                    sensor infrarrojo, complementando la detección realizada
+                    por el sensor de humo.
+                </p>
+            </article>
+
+            <article class="concepto">
+                <div class="emoji">💡</div>
+                <h3>LEDs</h3>
+                <p>
+                    Proporcionan señales luminosas para indicar diferentes
+                    estados o niveles de alerta del sistema.
+                </p>
+            </article>
+
+            <article class="concepto">
+                <div class="emoji">🔊</div>
+                <h3>Buzzer</h3>
+                <p>
+                    Genera una señal sonora cuando recibe una orden de
+                    Arduino, funcionando como alarma para avisar de manera
+                    inmediata.
+                </p>
+            </article>
+
+            <article class="concepto">
+                <div class="emoji">🖥️</div>
+                <h3>Pantalla LCD</h3>
+                <p>
+                    Permite mostrar mensajes e información sobre el estado
+                    del sistema, indicando si está en estado normal o de
+                    emergencia.
+                </p>
+            </article>
+
+            <article class="concepto">
+                <div class="emoji">🧠</div>
+                <h3>Arduino UNO</h3>
+                <p>
+                    Microcontrolador que recibe y procesa las señales de los
+                    sensores y controla los dispositivos de salida. Se
+                    eligió por ser accesible, programable y compatible.
+                </p>
+            </article>
+
+        </div>
+
+        <div class="destacado">
+            <strong>Comprobación de los componentes:</strong>
+            los componentes seleccionados son compatibles entre sí y pueden
+            ser controlados mediante Arduino. Se realizan pruebas
+            individuales y posteriormente pruebas del sistema completo, por
+            ejemplo verificando que el sensor de humo responda ante el humo,
+            que el sensor de fuego detecte una llama, y que Arduino active
+            correctamente los LEDs, el buzzer y la pantalla LCD.
+        </div>
+    </section>
+
+    <!-- CONEXIÓN PRELIMINAR -->
+    <section class="seccion">
+        <h2>🔌 Diagrama de conexión preliminar</h2>
+
+        <p>
+            <strong>Propósito:</strong> evitar errores antes del cableado
+            físico.
+        </p>
+
+        <h3>Componentes y conexiones</h3>
+        <ul class="lista">
+            <li>Arduino Uno: placa controladora principal, alimentada por USB o 9V.</li>
+            <li>Sensor de humo: entrada digital → Pin digital 2.</li>
+            <li>Sensor de fuego: entrada digital → Pin digital 3.</li>
+            <li>LED rojo (alarma visual): salida → Pin digital 12 + resistencia 220Ω a GND.</li>
+            <li>Zumbador / Buzzer: salida → Pin digital 11.</li>
+            <li>Pantalla LCD 16×2: SDA → A4, SCL → A5, alimentación 5V y GND.</li>
+            <li>Alimentación: todos los componentes comparten 5V y tierra (GND) comunes.</li>
+        </ul>
+    </section>
+
+    <!-- ALGORITMO -->
+    <section class="seccion">
+        <h2>🧩 Algoritmo / Pseudocódigo</h2>
+
+        <p><strong>Propósito:</strong> diseñar la lógica antes de programar.</p>
+
+        <ol class="lista">
+            <li>Configurar pines: Pin 2 y 3 como entradas (sensores); Pin 11 y 12 como salidas (zumbador y LED); inicializar pantalla LCD.</li>
+            <li>Mostrar en LCD: "SISTEMA CONTRA INCENDIOS".</li>
+            <li>Repetir siempre: leer sensor de humo y sensor de fuego.</li>
+            <li>Si NO hay humo ni fuego → apagar LED y zumbador, mostrar en LCD "ESTADO: NORMAL".</li>
+            <li>Si detecta humo O fuego → encender LED rojo y activar zumbador, mostrar en LCD "¡ALERTA! FUEGO/HUMO".</li>
+        </ol>
+
+        <div class="flujo">
+            <div class="paso">💨🔥 Sensores</div>
+            <div class="flecha">→</div>
+            <div class="paso">🧠 Arduino</div>
+            <div class="flecha">→</div>
+            <div class="paso">🔊💡🖥️ Alarmas</div>
+        </div>
+
+        <div class="destacado">
+            <strong>Observación:</strong>
+            el sistema funciona en ciclo continuo, monitorea en tiempo real y
+            activa alarma visual y sonora al detectar humo o fuego, mostrando
+            el estado en pantalla.
+        </div>
+    </section>
+
+    <!-- MATERIALES -->
+    <section class="seccion">
+        <h2>📦 Lista de materiales (BOM)</h2>
+
+        <p>Componentes electrónicos principales:</p>
+        <ul class="lista">
+            <li><strong>Placa Arduino Uno (o compatible):</strong> controlador principal del sistema.</li>
+            <li><strong>Protoboard:</strong> permite conectar y organizar los componentes sin soldadura.</li>
+            <li><strong>Sensor de humo:</strong> detecta la presencia de humo o partículas en el ambiente.</li>
+            <li><strong>Sensor de temperatura:</strong> mide la temperatura para detectar aumentos anormales.</li>
+            <li><strong>Buzzer activo:</strong> produce la señal sonora de alarma.</li>
+            <li><strong>LEDs (3 o más):</strong> indican visualmente el estado del sistema.</li>
+            <li><strong>Cables jumper y cables UTP:</strong> permiten realizar las conexiones eléctricas.</li>
+            <li><strong>Pantalla LCD:</strong> muestra información del estado y las lecturas de los sensores.</li>
+        </ul>
+
+        <p style="margin-top:14px;">Materiales para la maqueta:</p>
+        <ul class="lista">
+            <li>Madera MDF (triplay) para la estructura física del proyecto.</li>
+            <li>Pinturas (azul, crema, negra, blanca) para decorar y dar acabado a la estructura.</li>
+            <li>Super Glue y plastiloca para unir piezas y componentes.</li>
+            <li>Bisagras y tornillos para partes móviles y ensamblaje de la maqueta.</li>
+            <li>Desarmador para colocar y ajustar los tornillos.</li>
+            <li>Decoraciones para mejorar la presentación visual del proyecto.</li>
+        </ul>
+    </section>
+
+    <!-- COTIZACIÓN Y PRESUPUESTO -->
+    <section class="seccion">
+        <h2>💰 Cotización y presupuesto</h2>
+
+        <p>Costo estimado de los materiales principales:</p>
+        <ul class="lista">
+            <li>Plastiloca — $25.00</li>
+            <li>Super Glue — $30.00</li>
+            <li>Pintura azul — $15.00</li>
+            <li>Pintura negra — $15.00</li>
+            <li>Pintura blanca — $15.00</li>
+            <li>Pintura crema — $15.00</li>
+            <li>Madera MDF — $206.50</li>
+            <li>Sensor de humo — $50.00 aprox.</li>
+        </ul>
+
+        <div class="destacado">
+            <strong>Costo total estimado:</strong> $371.50 MXN
+            <br><br>
+            <strong>Presupuesto final:</strong> $1000 MXN. Cada integrante
+            aportará $200 MXN por algún imprevisto o modificación del equipo
+            mecánico, estructura y diseño.
+        </div>
+    </section>
+
+    <!-- RESPONSABILIDADES -->
+    <section class="seccion">
+        <h2>👥 Distribución de responsabilidades</h2>
+
+        <p>
+            Con el propósito de llevar a cabo el proyecto de manera
+            organizada y eficiente, se asignaron diferentes actividades a
+            cada integrante del equipo, considerando las necesidades de
+            desarrollo, diseño y funcionamiento de la maqueta.
+        </p>
+
+        <div class="conceptos-grid">
+
+            <article class="concepto">
+                <div class="emoji">💻</div>
+                <h3>Brandon — Desarrollo del código</h3>
+                <p>
+                    Responsable de la elaboración, programación y revisión
+                    del código. Realiza pruebas, identifica errores y efectúa
+                    modificaciones para garantizar el funcionamiento correcto.
+                </p>
+            </article>
+
+            <article class="concepto">
+                <div class="emoji">🎨</div>
+                <h3>Sonia — Diseño y decoración</h3>
+                <p>
+                    Participa en el diseño visual de la maqueta y en la
+                    selección y colocación de elementos decorativos, cuidando
+                    una presentación ordenada y atractiva.
+                </p>
+            </article>
+
+            <article class="concepto">
+                <div class="emoji">🎨</div>
+                <h3>Bárbara — Diseño y decoración</h3>
+                <p>
+                    Participa en la elaboración del diseño y la decoración,
+                    apoyando en la organización y colocación de los
+                    materiales para una presentación limpia.
+                </p>
+            </article>
+
+            <article class="concepto">
+                <div class="emoji">🎨</div>
+                <h3>Blanca — Diseño y decoración</h3>
+                <p>
+                    Colabora en el diseño y decoración de la maqueta,
+                    apoyando en los detalles visuales y la organización de
+                    los elementos que la conforman.
+                </p>
+            </article>
+
+            <article class="concepto">
+                <div class="emoji">🔧</div>
+                <h3>Manuel — Elaboración del circuito</h3>
+                <p>
+                    Responsable de diseñar, ensamblar y realizar las
+                    conexiones del circuito electrónico, verificando y
+                    probando su correcto funcionamiento.
+                </p>
+            </article>
+
+        </div>
+
+        <div class="destacado">
+            <strong>Trabajo colaborativo:</strong>
+            aunque cada integrante cuenta con una responsabilidad específica,
+            todos colaboran en las diferentes etapas del proyecto,
+            especialmente durante el ensamblaje, las pruebas finales y la
+            preparación de la presentación.
+        </div>
+    </section>
+
+    <!-- RIESGOS Y SEGURIDAD -->
+    <section class="seccion">
+        <h2>⚠️ Riesgos y seguridad</h2>
+
+        <h3>Riesgos identificados</h3>
+        <ul class="lista">
+            <li><strong>Eléctricos:</strong> cortocircuito por cableado incorrecto, descarga o daño a componentes al conectar voltaje indebido.</li>
+            <li><strong>Mecánicos:</strong> cortes al cortar o armar la estructura, pinchazos con cables o componentes.</li>
+            <li><strong>Térmicos:</strong> calentamiento excesivo de la placa Arduino o componentes; no se usa fuego real para evitar quemaduras o incendio.</li>
+        </ul>
+
+        <h3>Medidas preventivas</h3>
+        <ul class="lista">
+            <li>Trabajar con la fuente de alimentación desconectada al cablear.</li>
+            <li>Usar solo voltaje de 5V o 9V (bajo voltaje).</li>
+            <li>Revisar conexiones antes de encender el sistema.</li>
+            <li>Manipular herramientas con cuidado al construir la maqueta.</li>
+            <li>Realizar pruebas sin materiales inflamables.</li>
+        </ul>
+
+        <div class="destacado">
+            <strong>Propósito:</strong> garantizar la integridad de las
+            personas y del equipo durante todo el proyecto.
+        </div>
+    </section>
+
+    <!-- CRITERIOS DE ÉXITO -->
+    <section class="seccion">
+        <h2>✅ Criterios de éxito</h2>
+
+        <p>
+            El proyecto será considerado funcional cuando el sistema sea
+            capaz de detectar de manera automática la presencia de humo o
+            fuego y responder correctamente ante una situación de riesgo.
+        </p>
+
+        <h3>Criterios principales</h3>
+        <ul class="lista">
+            <li>El sensor de humo debe detectar la presencia de humo y enviar una señal al Arduino.</li>
+            <li>El sensor de fuego debe detectar una fuente de calor o llama de manera adecuada.</li>
+            <li>Al detectar una situación de riesgo, debe encenderse el LED rojo como alarma visual.</li>
+            <li>El buzzer debe activarse para proporcionar una alerta sonora.</li>
+            <li>La pantalla LCD debe cambiar de "ESTADO: NORMAL" a un mensaje de alerta.</li>
+            <li>Las alarmas deben activarse automáticamente al detectar una condición de riesgo.</li>
+            <li>Cuando no exista peligro, el sistema debe regresar al estado normal.</li>
+            <li>El sistema deberá mantenerse funcionando correctamente durante una prueba continua de aproximadamente 10 minutos.</li>
+        </ul>
+
+        <h3>Comprobación</h3>
+        <p>
+            Se realizarán pruebas individuales y una prueba general del
+            sistema. Primero se comprobará cada sensor por separado y
+            posteriormente se provocará una situación controlada de
+            detección para verificar que el Arduino active correctamente el
+            LED, el buzzer y la pantalla LCD. Se registrará si cada prueba
+            fue exitosa o no exitosa.
+        </p>
+    </section>
+
+
+    <!-- GALERÍA DE IMÁGENES DEL PROYECTO -->
+    <section class="seccion galeria-seccion" id="galeria">
+        <h2>🖼️ Galería del proyecto</h2>
+        <p>Imágenes que muestran el diseño, los componentes, la maqueta y las conexiones del sistema automatizado.</p>
+        <div class="galeria-grid">
+            
+        <article class="galeria-card">
+            <div class="galeria-placeholder">
+                <img src="diagrama.JPEG" alt="Diagrama de flujo" style="width: 200%; height: 280px; object-fit: contain;">
+            </div>
+            <div class="galeria-info">
+                <h3>Diagrama de flujo</h3>
+                <p>Proceso de funcionamiento del sistema automatizado.</p>
+            </div>
+        </article>
+
+        <article class="galeria-card">
+            <div class="galeria-placeholder">
+                <img src="sistema.JPEG" alt="Componentes del sistema" style="width: 200%; height: 280px; object-fit: contain;">
+            </div>
+            <div class="galeria-info">
+                <h3>Componentes del sistema</h3>
+                <p>Arduino, sensores, pantalla LCD, buzzer y LEDs</p>
+            </div>
+        </article>
+
+        <article class="galeria-card">
+            <div class="galeria-placeholder">
+                <img src="maqueta.JPEG" alt="Maqueta del proyecto" style="width: 200%; height: 280px; object-fit: contain;">
+            </div>
+            <div class="galeria-info">
+                <h3>Maqueta del proyecto</h3>
+                <p>PRepresentación de la vivienda con detección y control de incendios.</p>
+            </div>
+        </article>
+
+        <article class="galeria-card">
+            <div class="galeria-placeholder">
+                <img src="conexion.JPEG" alt="Diagrama de conexión" style="width: 200%; height: 280px; object-fit: contain;">
+            </div>
+            <div class="galeria-info">
+                <h3>Diagrama de conexión</h3>
+                <p>Conexiones preliminares de Arduino y los componentes electrónicos.</p>
+            </div>
+        </article>
+
+
+    <div class="volver">
+        <a href="index.html">
+            🏠 Regresar al catálogo principal
+        </a>
+    </div>
+
+</main>
+
+<footer>
+    <p>Álvarez García Blanca Mariana · Castillo Ovando Manuel · Hernández Hernández Brandon Gabriel · Pérez Salas Sonia Fernanda · Sánchez Rodríguez Barbara Raquel</p>
+    <p>Sistema Automatizado de Detección y Control de Incendios · 5.-A IA</p>
+</footer>
+
+</body>
+</html>
